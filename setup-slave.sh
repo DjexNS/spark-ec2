@@ -26,11 +26,11 @@ bash /root/spark-ec2/resolve-hostname.sh
 instance_type=$(curl http://169.254.169.254/latest/meta-data/instance-type 2> /dev/null)
 
 echo "Setting up slave on `hostname`... of type $instance_type"
+EXT4_MOUNT_OPTS="defaults,noatime"
 
 if [[ $instance_type == r3* || $instance_type == i2* || $instance_type == hi1* ]]; then
   # Format & mount using ext4, which has the best performance among ext3, ext4, and xfs based
   # on our shuffle heavy benchmark
-  EXT4_MOUNT_OPTS="defaults,noatime"
   rm -rf /mnt*
   mkdir /mnt
   # To turn TRIM support on, uncomment the following line.
