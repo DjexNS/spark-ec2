@@ -66,9 +66,9 @@ function setup_ebs_volume {
     # Check if device is already formatted
     if ! blkid $device; then
       mkdir $mount_point
-      yum install -q -y xfsprogs
-      if mkfs.xfs -q $device; then
-        mount -o $XFS_MOUNT_OPTS $device $mount_point
+      #yum install -q -y xfsprogs
+      if mkfs.ext4 -q $device; then
+        mount -o $EXT4_MOUNT_OPTS $device $mount_point
         chmod -R a+w $mount_point
       else
         # mkfs.xfs is not installed on this machine or has failed;
@@ -80,7 +80,7 @@ function setup_ebs_volume {
       # EBS volume is already formatted. Mount it if its not mounted yet.
       if ! grep -qs '$mount_point' /proc/mounts; then
         mkdir $mount_point
-        mount -o $XFS_MOUNT_OPTS $device $mount_point
+        mount -o $EXT4_MOUNT_OPTS $device $mount_point
         chmod -R a+w $mount_point
       fi
     fi
